@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,13 +10,23 @@ import {
   Image,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView,
 } from "react-native";
 //<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 //
 //<KeyboardAvoidingView behavior="height"></KeyboardAvoidingView></KeyboardAvoidingView>
 export default function RegistrationScreen() {
   const [isShowKeyBoard, setShowKeyBoard] = useState(false);
+  const [isShowParolSimbol, setShowParolSimbol] = useState(true);
+
+  useEffect(() => {
+    const showDid = Keyboard.addListener("keyboardDidHide", () => {
+      setShowKeyBoard(false);
+    });
+
+    return () => {
+      showDid.remove();
+    };
+  }, []);
 
   function onPresBtnKeyBoard() {
     if (!isShowKeyBoard) {
@@ -24,10 +34,29 @@ export default function RegistrationScreen() {
     } else {
       setShowKeyBoard(false);
     }
+    if (isShowKeyBoard) {
+      Keyboard.dismiss();
+      setShowKeyBoard(false);
+    }
+  }
+
+  function WithoutFeedback() {
+    if (isShowKeyBoard) {
+      Keyboard.dismiss();
+      setShowKeyBoard(false);
+    }
+  }
+
+  function onPressShowParolButton() {
+    if (!isShowParolSimbol) {
+      setShowParolSimbol(true);
+    } else {
+      setShowParolSimbol(false);
+    }
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback onPress={WithoutFeedback}>
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
@@ -78,8 +107,12 @@ export default function RegistrationScreen() {
               style={styles.input}
               placeholder="Пароль"
               onFocus={() => setShowKeyBoard(true)}
+              secureTextEntry={isShowParolSimbol}
             />
-            <TouchableOpacity style={styles.btnParol}>
+            <TouchableOpacity
+              style={styles.btnParol}
+              onPress={onPressShowParolButton}
+            >
               <Text style={styles.btnParolTxt}>Показать</Text>
             </TouchableOpacity>
             <TouchableOpacity
