@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ImageBackground,
+  Image,
 } from "react-native";
 
 export default function RegistrationScreen() {
@@ -16,6 +17,10 @@ export default function RegistrationScreen() {
         source={require("../images/photo_bg.jpg")}
       ></ImageBackground>
       <View style={styles.form}>
+        <Image
+          style={styles.imgReg}
+          source={require("../images/photo_two.jpg")}
+        />
         <Text style={styles.title}>Регистрация</Text>
         <TextInput style={styles.input} placeholder="Логин" />
         <TextInput style={styles.input} placeholder="Адрес электронной почты" />
@@ -107,6 +112,15 @@ const styles = StyleSheet.create({
   btnParol: {
     position: "absolute",
     right: 48,
-    bottom: 196,
+    top: 332,
+  },
+
+  imgReg: {
+    height: 120,
+    width: 120,
+    borderRadius: 16,
+    position: "absolute",
+    left: 150,
+    top: -54,
   },
 });
