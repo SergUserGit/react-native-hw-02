@@ -11,20 +11,36 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-//<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-//
-//<KeyboardAvoidingView behavior="height"></KeyboardAvoidingView></KeyboardAvoidingView>
+
+import { useFonts } from "expo-font";
+
 export default function RegistrationScreen() {
   const [isShowKeyBoard, setShowKeyBoard] = useState(false);
   const [isShowParolSimbol, setShowParolSimbol] = useState(true);
+  const [login, SetLogin] = useState("");
+  const [email, SetEmail] = useState("");
+  const [password, SetPassword] = useState("");
+
+  const [fontsLoaded] = useFonts({
+    "Roboto-Regular": require("../fonts/Roboto-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   useEffect(() => {
     const showDid = Keyboard.addListener("keyboardDidHide", () => {
       setShowKeyBoard(false);
     });
 
+    const keyboardDidShow = Keyboard.addListener("keyboardDidShow", () => {
+      setShowKeyBoard(true);
+    });
+
     return () => {
       showDid.remove();
+      keyboardDidShow.remove();
     };
   }, []);
 
@@ -53,6 +69,24 @@ export default function RegistrationScreen() {
     } else {
       setShowParolSimbol(false);
     }
+  }
+
+  function onChangeTextLogin(value) {
+    SetLogin(value);
+  }
+
+  function onChangeTextEmail(value) {
+    SetEmail(value);
+  }
+
+  function onChangeTextPassword(value) {
+    SetPassword(value);
+  }
+
+  function onSubmitForm() {
+    console.log("Login", login);
+    console.log("Email", email);
+    console.log("Password", password);
   }
 
   return (
@@ -94,20 +128,31 @@ export default function RegistrationScreen() {
             />
             <Text style={styles.title}>Регистрация</Text>
             <TextInput
-              style={styles.input}
+              style={{
+                ...styles.input,
+                color: isShowKeyBoard ? "#212121" : "#BDBDBD",
+                backgroundColor: isShowKeyBoard ? "#FFFFFF" : "#F6F6F6",
+                borderColor: isShowKeyBoard ? "#FF6C00" : "#E8E8E8",
+              }}
               placeholder="Логин"
               onFocus={() => setShowKeyBoard(true)}
+              onChangeText={onChangeTextLogin}
+              value={login}
             />
             <TextInput
               style={styles.input}
               placeholder="Адрес электронной почты"
               onFocus={() => setShowKeyBoard(true)}
+              onChangeText={onChangeTextEmail}
+              value={email}
             />
             <TextInput
               style={styles.input}
               placeholder="Пароль"
               onFocus={() => setShowKeyBoard(true)}
               secureTextEntry={isShowParolSimbol}
+              onChangeText={onChangeTextPassword}
+              value={password}
             />
             <TouchableOpacity
               style={styles.btnParol}
@@ -116,6 +161,7 @@ export default function RegistrationScreen() {
               <Text style={styles.btnParolTxt}>Показать</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={onSubmitForm}
               style={{ display: isShowKeyBoard ? "none" : "flex" }}
             >
               <Text style={styles.btn}>Зарегистрироваться</Text>
@@ -153,11 +199,10 @@ const styles = StyleSheet.create({
     color: "#212121",
     marginBottom: 30,
     marginTop: 92,
+    fontFamily: "Roboto-Regular",
   },
   form: {
     backgroundColor: "#FFFFFF",
-    // height: 549,
-    //height: 374,
     position: "relative",
   },
   input: {
@@ -175,6 +220,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     maxWidth: 343,
     marginHorizontal: 32,
+    fontFamily: "Roboto-Regular",
   },
   btn: {
     backgroundColor: "#FF6C00",
@@ -190,6 +236,7 @@ const styles = StyleSheet.create({
     marginTop: 28,
     marginHorizontal: 16,
     marginBottom: 16,
+    fontFamily: "Roboto-Regular",
   },
   textEnter: {
     marginHorizontal: 94,
@@ -198,6 +245,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "center",
     color: "#1B4371",
+    fontFamily: "Roboto-Regular",
   },
 
   btnParolTxt: {
@@ -207,6 +255,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "right",
     color: "#1B4371",
+    fontFamily: "Roboto-Regular",
   },
 
   btnParol: {
@@ -234,7 +283,6 @@ const styles = StyleSheet.create({
     height: 25,
     borderStyle: "solid",
     borderWidth: 1,
-    //   borderColor: "#FF6C00",
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
