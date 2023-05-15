@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,22 +12,10 @@ import {
   Keyboard,
 } from "react-native";
 
-import { useFonts } from "expo-font";
+import * as Font from "expo-font";
 
 export default function RegistrationScreen() {
-  const [isShowKeyBoard, setShowKeyBoard] = useState(false);
-  const [isShowParolSimbol, setShowParolSimbol] = useState(true);
-  const [login, SetLogin] = useState("");
-  const [email, SetEmail] = useState("");
-  const [password, SetPassword] = useState("");
-
-  const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("../fonts/Roboto-Regular.ttf"),
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
+  const [fontLoaded, setFontLoaded] = useState(false);
 
   useEffect(() => {
     const showDid = Keyboard.addListener("keyboardDidHide", () => {
@@ -44,12 +32,18 @@ export default function RegistrationScreen() {
     };
   }, []);
 
+  const [isShowKeyBoard, setShowKeyBoard] = useState(false);
+  const [isShowParolSimbol, setShowParolSimbol] = useState(true);
+  const [login, SetLogin] = useState("");
+  const [email, SetEmail] = useState("");
+  const [password, SetPassword] = useState("");
+
   function onPresBtnKeyBoard() {
-    if (!isShowKeyBoard) {
-      setShowKeyBoard(true);
-    } else {
-      setShowKeyBoard(false);
-    }
+    showKeyBoard();
+    onHideKeyBoard();
+  }
+
+  function onHideKeyBoard() {
     if (isShowKeyBoard) {
       Keyboard.dismiss();
       setShowKeyBoard(false);
@@ -57,17 +51,26 @@ export default function RegistrationScreen() {
   }
 
   function WithoutFeedback() {
-    if (isShowKeyBoard) {
-      Keyboard.dismiss();
-      setShowKeyBoard(false);
-    }
+    onHideKeyBoard();
   }
 
   function onPressShowParolButton() {
+    showParolSimbol();
+  }
+
+  function showParolSimbol() {
     if (!isShowParolSimbol) {
       setShowParolSimbol(true);
     } else {
       setShowParolSimbol(false);
+    }
+  }
+
+  function showKeyBoard() {
+    if (!isShowKeyBoard) {
+      setShowKeyBoard(true);
+    } else {
+      setShowKeyBoard(false);
     }
   }
 
@@ -88,6 +91,17 @@ export default function RegistrationScreen() {
     console.log("Email", email);
     console.log("Password", password);
   }
+
+  useEffect(() => {
+    Font.loadAsync({
+      "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
+      "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
+    }).then(() => {
+      setFontLoaded(true);
+    });
+  }, []);
+
+  if (!fontLoaded) return null;
 
   return (
     <TouchableWithoutFeedback onPress={WithoutFeedback}>
@@ -199,7 +213,7 @@ const styles = StyleSheet.create({
     color: "#212121",
     marginBottom: 30,
     marginTop: 92,
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Medium",
   },
   form: {
     backgroundColor: "#FFFFFF",
