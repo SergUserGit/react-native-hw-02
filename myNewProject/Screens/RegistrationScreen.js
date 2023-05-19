@@ -113,7 +113,7 @@ export default function RegistrationScreen() {
           <View
             style={{
               ...styles.form,
-              height: isShowKeyBoard ? 378 : 549,
+              height: isShowKeyBoard ? 400 : 549,
             }}
           >
             <TouchableOpacity
@@ -218,6 +218,10 @@ const styles = StyleSheet.create({
   form: {
     backgroundColor: "#FFFFFF",
     position: "relative",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0,
   },
   input: {
     backgroundColor: "#F6F6F6",
